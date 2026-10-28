@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Planner · SmartStudy AI{% endblock %}
+{% block content %}
+<section class="planner-heading"><div><div class="eyebrow">YOUR STUDY SPACE · PLANNER</div><h1>Make your next study session count.</h1>
+  <p>Choose a saved lesson so your plan is based on its actual concepts and quiz topics, and add an exam date to spread the work out.</p></div>
+  <div class="planner-hero-icon" aria-hidden="true">◷</div></section>
+<section class="planner-layout">
+  <form method="post" class="panel planner-form">
+    {{ csrf_field() }}
+    <div class="planner-panel-heading"><span class="planner-icon">✎</span><div><h2>Plan your session</h2><p class="sub">Select the lesson you want to revise.</p></div></div>
+    <label for="lesson_id">Saved lesson</label>
+    <div class="select-wrap"><select id="lesson_id" name="lesson_id" required>
+      <option value="" disabled {{ 'selected' if not selected }}>Choose a saved lesson…</option>
+      {% for l in saved %}<option value="{{ l.id }}" {{ 'selected' if selected == l.id|string }}>{{ l.title or 'Untitled lesson' }}{% if l.created_at %} · {{ l.created_at[:10] }}{% endif %}</option>{% endfor %}
+      <option value="custom" {{ 'selected' if selected == 'custom' }}>Plan by topic instead (no saved lesson)</option>
+    </select></div>
+    <div id="custom-topic-wrap" style="display:{{ 'block' if show_custom else 'none' }}">
+      <label for="custom_subject">Custom topic</label>
+      <input id="custom_subject" name="custom_subject" maxlength="160" value="{{ custom }}" placeholder="e.g. Computer Science"></div>
+    <label for="minutes">Available time</label>
+    <div class="select-wrap"><select id="minutes" name="minutes">{% for m in minute_options %}<option value="{{ m }}" {{ 'selected' if minutes == m }}>{{ m }} minutes</option>{% endfor %}</select></div>
+    <label for="exam">Exam date <span class="optional-label">OPTIONAL</span></label>
+    <input type="date" id="exam" name="exam" min="{{ today }}" value="{{ exam }}">
+    <button class="btn planner-submit" type="submit">Create revision plan <span aria-hidden="true">→</span></button>
+    <p class="planner-note">With a saved lesson, SmartStudy uses its concepts, key terms and quiz topics (and any topics your Study Coach flagged) to shape the plan. An exam date changes how the work is spread out.</p>
+  </form>
+
+  <div class="panel planner-mission">
+    <div class="planner-panel-heading"><span class="planner-icon mission-icon">✦</span><div><h2>Your study mission</h2><p class="sub">A clear plan, one step at a time.</p></div></div>
+    {% if plan %}
+      <p class="pill">{{ plan.total }} minutes · {{ plan.subject }}</p>
+      {% for name, mins, desc in plan['items'] %}
+        <div class="topic"><div><div class="topic-title-row"><strong>{{ name }}</strong><span class="topic-time">{{ mins }} min</span></div><p class="sub">{{ desc }}</p></div></div>
+      {% endfor %}
+      {% if plan.exam_note %}<div class="notice" style="margin-top:14px"><strong>Exam strategy</strong><br>{{ plan.exam_note }}</div>{% endif %}
+      <p class="planner-note">{{ plan.note }}</p>
+    {% else %}
+      <div class="empty">{{ 'Choose one of your saved lessons, select your available time, then create a plan based on that lesson’s content.' if saved else 'No saved lessons yet. Create a learning kit in Lesson Lab first, and it will appear in this list.' }}</div>
+    {% endif %}
+  </div>
+</section>
+<script>
+(function () {
+  var sel = document.getElementById('lesson_id'), wrap = document.getElementById('custom-topic-wrap');
+  if (!sel || !wrap) return;
+  function toggle() { wrap.style.display = (sel.value === 'custom') ? 'block' : 'none'; }
+  sel.addEventListener('change', toggle); toggle();
+})();
+</script>
+{% endblock %}

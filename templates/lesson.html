@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Lesson Lab · SmartStudy AI{% endblock %}
+{% block content %}
+<section class="lab-heading">
+  <div><div class="eyebrow">LESSON LAB · PERSONAL LEARNING</div>
+    <h1>Turn your notes into a learning kit.</h1>
+    <p>Build a focused lesson with clear explanations, worked examples, key terms, and practice questions tailored to your material.</p></div>
+  <div class="actions"><a class="btn secondary" href="{{ url_for('syllabus_upload') }}">⇧ Build from syllabus PDF</a><a class="btn secondary" href="{{ url_for('dashboard') }}">← Dashboard</a></div>
+</section>
+<section class="lesson-layout">
+  <div class="panel lesson-form-panel">
+    <div class="saved-section-title"><div class="heading-icon">✎</div><div><h2>Start with your notes</h2><p class="sub">Add the material you want to understand.</p></div></div>
+    <form method="post" data-loading="Generating your kit… (up to a minute)">
+      {{ csrf_field() }}
+      <label for="topic">Lesson / topic name</label>
+      <input id="topic" name="topic" required maxlength="160" value="{{ topic }}" placeholder="e.g. Introduction to Electronics">
+      <label for="notes">Lesson notes</label>
+      <textarea id="notes" name="notes" required minlength="40" maxlength="{{ max_notes }}" placeholder="Paste your class notes, textbook extract, or study material here...">{{ notes }}</textarea>
+      <button class="btn" type="submit">✦ Generate learning kit <span aria-hidden="true">→</span></button>
+    </form>
+    <p class="sub">Your notes are sent to Gemini to create the lesson and quiz. Up to {{ '{:,}'.format(max_notes) }} characters.</p>
+  </div>
+  <div class="kit-result"><div class="panel">
+    <div class="saved-section-title"><div class="heading-icon">✦</div><div><h2>Your learning kit</h2><p class="sub">Your lesson will open here once it is ready.</p></div></div>
+    <div class="kit-placeholder"><div class="placeholder-icon">✦</div><h3>Your next study session starts here</h3>
+      <p>Add your lesson notes and generate a kit. Your content will be organized into a clear learning goal, bite-sized concepts, examples, key terms, a recap, and practice questions.</p>
+      <div class="placeholder-features"><span>Learning goals</span><span>Concepts &amp; examples</span><span>Key terms</span><span>Practice quiz</span></div></div>
+  </div></div>
+</section>
+{% endblock %}

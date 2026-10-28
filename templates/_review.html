@@ -1,0 +1,8 @@
+{% for r in review %}
+<div class="topic"><div>
+  <strong>{{ loop.index }}. {{ r.question }}</strong>
+  <p class="sub"><span class="pill {{ 'result-good' if r.ok else 'result-bad' }}">{{ 'Correct' if r.ok else 'Review' }}</span>
+    Your answer: {{ r.your }} · Correct answer: {{ r.correct }}</p>
+  <p>{{ r.explanation }}</p>
+</div></div>
+{% endfor %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}{{ outline.get('title', row.title) }} · SmartStudy AI{% endblock %}
+{% block content %}
+<section class="lab-heading"><div><div class="eyebrow">EXTRACTED SYLLABUS</div><h1>{{ outline.get('title', row.title) }}</h1>
+  <p>Choose one unit to generate a quick college-level learning kit. It will be saved with your other lessons.</p></div>
+  <a class="btn secondary" href="{{ url_for('syllabus_upload') }}">Upload another PDF</a></section>
+<section class="panel"><span class="pill">{{ units|length }} UNITS FOUND</span><div style="margin-top:16px">
+  {% for u in units %}<div class="topic"><div><strong>{{ loop.index }}. {{ u.title }}</strong><p class="sub">{{ u.topics or 'Topics not specified in syllabus.' }}</p></div></div>{% endfor %}</div>
+  <form method="post" class="panel unit-generation-form" data-loading="Generating this unit… (up to a minute)">
+    {{ csrf_field() }}
+    <label for="unit_index">Choose unit to generate</label>
+    <select id="unit_index" name="unit_index" required><option value="" selected disabled>Select a unit…</option>
+      {% for u in units %}<option value="{{ loop.index0 }}">{{ loop.index }}. {{ u.title }}</option>{% endfor %}</select>
+    <p class="sub unit-helper">College level · quick revision · one unit at a time.</p>
+    <button class="btn" type="submit">Generate and save this unit →</button></form>
+</section>
+{% endblock %}

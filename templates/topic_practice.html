@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Practice: {{ topic }} · SmartStudy AI{% endblock %}
+{% block content %}
+<section class="saved-hero"><div><div class="eyebrow">FOCUSED PRACTICE</div><h1>{{ topic }}</h1>
+  <p>{{ questions|length }} questions in this session, using saved questions plus extra targeted questions where needed.</p>
+  <div class="saved-actions"><a class="btn secondary" href="{{ url_for('dashboard') }}">← Dashboard</a></div></div><div class="saved-icon">✦</div></section>
+<form method="post" class="panel quiz-panel">
+  {{ csrf_field() }}
+  {% for q in questions %}{% set i = loop.index0 %}
+  <fieldset class="quiz-question"><legend><strong><span class="question-number">{{ loop.index }}</span><span class="question-title">{{ q.question }}</span></strong></legend>
+    {% for opt in q.options %}<label class="choice"><input type="radio" name="q{{ i }}" value="{{ loop.index0 }}" required><span>{{ opt }}</span></label>{% endfor %}
+  </fieldset>{% endfor %}
+  <button class="btn quiz-submit" type="submit">Submit focused practice →</button>
+</form>
+{% endblock %}

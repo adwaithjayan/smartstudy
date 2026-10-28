@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Syllabus import · SmartStudy AI{% endblock %}
+{% block content %}
+<section class="lab-heading"><div><div class="eyebrow">SYLLABUS IMPORT · PDF TO LESSONS</div><h1>Start with your syllabus.</h1>
+  <p>Upload your college syllabus, review the extracted units, then generate a quick learning kit for one unit at a time.</p></div>
+  <a class="btn secondary" href="{{ url_for('lesson_lab') }}">← Back to Lesson Lab</a></section>
+<section class="grid">
+  <div class="panel"><h2>Upload syllabus PDF</h2><p class="sub">Text-based PDFs work best. Scanned PDFs need OCR first.</p>
+    <form method="post" enctype="multipart/form-data" data-loading="Reading your syllabus…">
+      {{ csrf_field() }}
+      <label for="syllabus_pdf">Syllabus file</label>
+      <input id="syllabus_pdf" name="syllabus_pdf" type="file" accept="application/pdf,.pdf" required>
+      <p class="sub">PDF only · maximum 10 MB · processed in memory.</p>
+      <button class="btn" type="submit">Extract syllabus units →</button></form></div>
+  <div class="panel"><h2>What happens next?</h2>
+    <div class="topic"><div><strong>1. Extract units</strong><p class="sub">Preserve unit names and order from your syllabus.</p></div></div>
+    <div class="topic"><div><strong>2. Generate a quick kit</strong><p class="sub">Concise college-level notes, key terms, recap, and questions.</p></div></div>
+    <div class="topic"><div><strong>3. Save your lesson</strong><p class="sub">Saved lessons appear in Recent Lessons and the Planner.</p></div></div></div>
+</section>
+{% endblock %}

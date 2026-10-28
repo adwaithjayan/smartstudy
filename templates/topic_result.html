@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Practice result · SmartStudy AI{% endblock %}
+{% block content %}
+<section class="saved-hero"><div><div class="eyebrow">FOCUSED PRACTICE</div><h1>{{ topic }}</h1>
+  <p>Result saved. Your Study Coach will weigh this attempt more heavily than older ones.</p>
+  <div class="saved-actions"><a class="btn" href="{{ url_for('topic_practice', topic=topic) }}">Practice again →</a><a class="btn secondary" href="{{ url_for('dashboard') }}">Back to dashboard</a></div></div>
+  <div class="saved-icon">{{ pct }}%</div></section>
+<section class="panel"><h2>Your result: {{ score }} / {{ total }}</h2>
+  <div class="progress-track" style="height:10px;margin-top:14px"><div class="progress-fill" style="width:{{ pct }}%;background:#9588ff"></div></div>
+  <p class="sub">{{ total }} questions · {{ pct }}% accuracy on this attempt.</p>
+  {% include "_review.html" %}</section>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Log in · SmartStudy AI{% endblock %}
+{% block content %}
+<section class="auth-wrap"><div class="panel auth-card">
+  <div class="eyebrow">SMARTSTUDY AI</div><h1>Welcome back.</h1><p class="sub">Log in to see your own lessons, quizzes and study plan.</p>
+  <form method="post">
+    {{ csrf_field() }}
+    <label for="email">Email</label>
+    <input id="email" name="email" type="email" required autocomplete="email" value="{{ email }}" autofocus>
+    <label for="password">Password</label>
+    <input id="password" name="password" type="password" required autocomplete="current-password">
+    <button class="btn auth-submit" type="submit">Log in <span aria-hidden="true">→</span></button>
+  </form>
+  <p class="sub auth-switch">New here? <a href="{{ url_for('register') }}">Create an account</a></p>
+</div></section>
+{% endblock %}

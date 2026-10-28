@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero dashboard-hero">
+  <div>
+    <div class="eyebrow">WELCOME BACK, {{ g.user.name|upper }}</div>
+    <h1>Learn with <span>clarity.</span></h1>
+    <p>Turn your notes into clear lessons, useful practice questions, and a focused revision plan.</p>
+    <div class="actions">
+      <a class="btn" href="{{ url_for('lesson_lab') }}">＋ Create a learning kit</a>
+      <a class="btn secondary" href="{{ url_for('planner') }}">Plan a study session →</a>
+    </div>
+  </div>
+  <div class="hero-art" aria-hidden="true"><div class="art-orb"></div><div class="book book-one"></div><div class="book book-two"></div><div class="art-plant">✦</div></div>
+</section>
+
+<section class="stats dashboard-stats">
+  <div class="stat metric"><div class="metric-icon purple-icon">▥</div><div><small>Latest quiz accuracy</small><strong>{{ acc ~ '%' if acc is not none else '—' }}</strong><span>{{ trend }}</span></div><div class="metric-arrow">›</div></div>
+  <div class="stat metric"><div class="metric-icon teal-icon">◎</div><div><small>Topics to revisit</small><strong>{{ weak|length }}</strong><span>Based on your recent quiz results</span></div><div class="metric-arrow">›</div></div>
+  <div class="stat metric"><div class="metric-icon blue-icon">▣</div><div><small>Saved lessons</small><strong>{{ total_lessons }}</strong><span>Total lessons in your library</span></div><div class="metric-arrow">›</div></div>
+</section>
+
+<section class="dashboard-grid">
+  <div class="panel coach-panel">
+    <div class="section-heading"><div class="heading-icon">✿</div>
+      <div><h2>Your study coach</h2><p class="sub">{{ 'Focus on these topics to improve' if weak else 'Complete a quiz to get personalized topic recommendations' }}</p></div>
+      <a href="{{ url_for('planner') }}" class="view-link">Plan study →</a></div>
+    {% for x in weak %}
+      {% set color = 'pink' if x.accuracy < 50 else ('gold' if x.accuracy < 70 else 'orange') %}
+      <div class="coach-row">
+        <div class="coach-number">{{ loop.index }}</div>
+        <div class="coach-copy"><strong>{{ x.topic }}</strong>
+          <p>{{ x.correct }} of {{ x.total }} answers correct · Review this concept, then retry focused questions.</p>
+          <a class="topic-practice-link" href="{{ url_for('topic_practice', topic=x.topic) }}">Practice this topic →</a></div>
+        <div class="coach-progress"><div class="progress-track"><div class="progress-fill {{ color }}" style="width:{{ x.accuracy }}%"></div></div><span>{{ x.accuracy }}%</span></div>
+      </div>
+    {% else %}
+      <div class="coach-empty"><div class="empty-symbol">✦</div><strong>No review topics yet</strong>
+        <p>Your study coach will show concepts here after you complete a quiz.</p>
+        <a class="btn" href="{{ url_for('lesson_lab') }}">Create a lesson →</a></div>
+    {% endfor %}
+  </div>
+
+  <div class="panel recent-panel">
+    <div class="section-heading"><div class="heading-icon clock-icon">◷</div>
+      <div><h2>Recent lessons</h2><p class="sub">Your latest learning kits</p></div>
+      <a href="{{ url_for('lesson_lab') }}" class="view-link">New kit →</a></div>
+    {% for l in lessons %}
+      <a class="recent-row" href="{{ url_for('saved_lesson', lid=l.id) }}">
+        <div class="recent-icon {{ 'teal-icon' if loop.index0 % 2 else 'purple-icon' }}">{{ '▣' if loop.index0 % 3 else '▤' }}</div>
+        <div class="recent-copy"><strong>{{ l.title or 'Untitled lesson' }}</strong><p>{{ l.created_at|when }}</p></div>
+        <span class="open-kit">Open kit →</span></a>
+    {% else %}
+      <div class="coach-empty"><strong>No saved lessons yet</strong><p>Create your first learning kit and it will appear here.</p>
+        <div class="actions"><a class="btn" href="{{ url_for('lesson_lab') }}">Create a learning kit →</a>
+        <form method="post" action="{{ url_for('load_demo') }}">{{ csrf_field() }}<button class="btn secondary" type="submit">Load a demo lesson</button></form></div></div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

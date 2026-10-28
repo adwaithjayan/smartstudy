@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Quiz · SmartStudy AI{% endblock %}
+{% block content %}
+<section class="quiz-heading"><div class="eyebrow">ADAPTIVE QUIZ</div><h1>{{ lesson.title or 'Untitled quiz' }}</h1><p class="muted">Choose one answer for each question.</p></section>
+<form method="post" class="panel quiz-panel" data-loading="Scoring and preparing your coaching… ">
+  {{ csrf_field() }}
+  {% for q in questions %}{% set i = loop.index0 %}
+  <fieldset class="quiz-question">
+    <legend><strong><span class="question-number">{{ loop.index }}</span><span class="question-title">{{ q.question }}</span></strong></legend>
+    <p class="sub quiz-topic">Topic: {{ q.topic or 'Practice' }}</p>
+    {% for opt in q.options %}<label class="choice"><input type="radio" name="q{{ i }}" value="{{ loop.index0 }}" required><span>{{ opt }}</span></label>{% endfor %}
+  </fieldset>
+  {% endfor %}
+  <button class="btn quiz-submit" type="submit">Finish quiz &amp; get recommendations <span aria-hidden="true">→</span></button>
+</form>
+{% endblock %}

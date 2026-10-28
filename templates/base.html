@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}SmartStudy AI{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+{% set ep = request.endpoint or '' %}
+<header>
+  <a class="brand" href="{{ url_for('dashboard') }}" aria-label="SmartStudy AI home"><span class="brand-star">✦</span> SmartStudy <span>AI</span></a>
+  {% if g.user %}<nav class="topnav">
+    <a class="nav-link {{ 'active' if ep == 'dashboard' }}" href="{{ url_for('dashboard') }}">⌂ <span>Dashboard</span></a>
+    <a class="nav-link {{ 'active' if ep in ('lesson_lab','saved_lesson','quiz','syllabus_upload','syllabus_detail','topic_practice') }}" href="{{ url_for('lesson_lab') }}">▣ <span>Lesson Lab</span></a>
+    <a class="nav-link {{ 'active' if ep == 'planner' }}" href="{{ url_for('planner') }}">▦ <span>Planner</span></a>
+    <form method="post" action="{{ url_for('logout') }}" class="logout-form">{{ csrf_field() }}<button class="nav-link" type="submit" title="Signed in as {{ g.user.email }}">⎋ <span>Log out</span></button></form>
+  </nav>{% endif %}
+</header>
+<main>
+  {% for category, message in get_flashed_messages(with_categories=true) %}
+    <div class="flash {{ 'error' if category == 'error' else '' }}" role="status">{{ message }}</div>
+  {% endfor %}
+  {% block content %}{% endblock %}
+</main>
+<footer class="footer">SmartStudy AI · Learn Smarter, Not Harder.</footer>
+<script>
+/* Give slow (AI) forms visible feedback so users don't double-submit. */
+document.querySelectorAll('form[data-loading]').forEach(function (f) {
+  f.addEventListener('submit', function () {
+    var b = f.querySelector('button[type=submit], button:not([type])');
+    if (b) { b.disabled = true; b.textContent = f.dataset.loading; }
+  });
+});
+</script>
+</body>
+</html>

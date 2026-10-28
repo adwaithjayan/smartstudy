@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}{{ lesson.title }} · SmartStudy AI{% endblock %}
+{% block content %}
+<section class="saved-hero">
+  <div><div class="eyebrow">LEARNING KIT</div><h1>{{ lesson.title or 'Untitled lesson' }}</h1>
+    <p>Read the lesson, then test yourself. Everything generated for this kit is saved here.</p>
+    <div class="saved-actions">
+      {% if questions %}<a class="btn" href="{{ url_for('quiz', lid=lesson.id) }}">Start {{ questions|length }}-question quiz →</a>{% endif %}
+      <a class="btn secondary" href="{{ url_for('lesson_lab') }}">＋ Create another kit</a></div></div>
+  <div class="saved-icon">▣</div>
+</section>
+
+<section class="saved-layout">
+  <div class="stack">
+    <div class="panel">
+      <div class="saved-section-title"><div class="heading-icon">✦</div><div><h2>Lesson overview</h2><p class="sub">The main idea to keep in mind.</p></div></div>
+      <div class="learning-goal"><strong>Learning goal</strong>{{ lesson.summary or 'No lesson summary was saved.' }}</div>
+      {% if kit and kit.objectives %}<h3 style="margin-top:20px">What you will learn</h3><ul>{% for o in kit.objectives %}<li>{{ o }}</li>{% endfor %}</ul>{% endif %}
+    </div>
+    {% if kit %}
+      <div class="panel"><h2>Learn the concepts</h2><p class="sub">Work through the ideas before testing yourself.</p>
+        {% for c in kit.concepts %}
+          <div class="topic" style="display:block"><h3>{{ loop.index }}. {{ c.title }}</h3><p>{{ c.explanation }}</p>
+            {% if c.example %}<div class="notice"><strong>Example</strong><br>{{ c.example }}</div>{% endif %}</div>
+        {% endfor %}</div>
+      {% if kit.key_terms %}<div class="panel"><h2>Key terms</h2>
+        {% for t in kit.key_terms %}<div class="topic"><div><strong>{{ t.term }}</strong><p>{{ t.definition }}</p></div></div>{% endfor %}</div>{% endif %}
+      {% if kit.recap %}<div class="panel"><h2>Quick recap</h2><ul>{% for r in kit.recap %}<li>{{ r }}</li>{% endfor %}</ul></div>{% endif %}
+    {% endif %}
+    <div class="panel">
+      <div class="saved-section-title"><div class="heading-icon">≡</div><div><h2>Original lesson notes</h2><p class="sub">Your source material for this kit.</p></div></div>
+      <div class="source-notes">{{ lesson.notes }}</div></div>
+  </div>
+
+  <div class="panel">
+    <div class="saved-section-title"><div class="heading-icon">☷</div><div><h2>Practice questions</h2><p class="sub">Saved with this kit.</p></div><span class="saved-count">{{ questions|length }} questions</span></div>
+    {% for q in questions %}
+      <div class="question-preview"><strong>{{ loop.index }}. {{ q.question }}</strong><p>{{ q.topic or 'Practice' }}{% if q.question_type %} · {{ q.question_type }}{% endif %}</p></div>
+    {% else %}<div class="empty">No saved questions are available for this lesson.</div>{% endfor %}
+  </div>
+</section>
+{% endblock %}

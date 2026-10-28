@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Quiz results · SmartStudy AI{% endblock %}
+{% block content %}
+<div class="eyebrow">YOUR LEARNING INSIGHTS</div><h1>Quiz complete.</h1>
+<section class="stats">
+  <div class="stat"><small>Score</small><strong>{{ score }}/{{ total }}</strong></div>
+  <div class="stat"><small>Accuracy</small><strong>{{ pct }}%</strong></div>
+  <div class="stat"><small>Topics to revisit</small><strong>{{ weak|length }}</strong></div>
+</section>
+<section class="panel"><h2>Answer review</h2>{% include "_review.html" %}</section>
+
+<section class="panel" style="margin-top:18px"><h2>Adaptive learning coach</h2>
+  {% if coach_error %}
+    <div class="flash error">The coach is unavailable right now: {{ coach_error }}<br>Your quiz result has been saved.</div>
+  {% else %}
+    <div class="notice">{{ coach.feedback }}</div>
+    <h3>Recommended next steps</h3><ol>{% for rec in coach.recommendations %}<li style="margin:8px 0">{{ rec }}</li>{% endfor %}</ol>
+    <h3>Targeted practice</h3><p class="sub">Generated from this lesson and your missed concepts.</p>
+    {% for q in coach.practice_questions %}
+      <div class="topic"><div><strong>{{ loop.index }}. {{ q.question }}</strong><p class="sub">Topic: {{ q.topic }}</p>
+        {% for opt in q.options %}<p style="margin:4px 0">{{ 'ABCD'[loop.index0] }}. {{ opt }}</p>{% endfor %}
+        <p><strong>Answer:</strong> {{ q.options[q.answer] }}</p><p>{{ q.explanation }}</p></div></div>
+    {% endfor %}
+  {% endif %}
+</section>
+
+<section class="panel" style="margin-top:18px"><h2>Your topics to revisit</h2>
+  {% for x in weak %}
+    <div class="topic"><div><strong>{{ x.topic }}</strong><p class="sub">{{ x.correct }} of {{ x.total }} correct in this quiz.</p>
+      <a class="topic-practice-link" href="{{ url_for('topic_practice', topic=x.topic) }}">Practice this topic →</a></div><span class="pill">{{ x.accuracy }}%</span></div>
+  {% else %}<div class="empty">Great work. Try a more challenging practice set.</div>{% endfor %}
+  <div class="actions"><a class="btn" href="{{ url_for('planner') }}">Create revision plan →</a>
+    <a class="btn secondary" href="{{ url_for('quiz', lid=lesson.id) }}">Retake quiz</a>
+    <a class="btn secondary" href="{{ url_for('lesson_lab') }}">Study another lesson</a></div>
+</section>
+{% endblock %}

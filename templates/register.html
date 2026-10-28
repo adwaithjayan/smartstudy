@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Create account · SmartStudy AI{% endblock %}
+{% block content %}
+<section class="auth-wrap"><div class="panel auth-card">
+  <div class="eyebrow">SMARTSTUDY AI</div><h1>Create your account.</h1><p class="sub">Your lessons, results and plans stay private to your account.</p>
+  <form method="post">
+    {{ csrf_field() }}
+    <label for="name">Name <span class="optional-label">OPTIONAL</span></label>
+    <input id="name" name="name" maxlength="60" autocomplete="name" value="{{ name }}">
+    <label for="email">Email</label>
+    <input id="email" name="email" type="email" required autocomplete="email" value="{{ email }}">
+    <label for="password">Password <span class="optional-label">MIN 8 CHARACTERS</span></label>
+    <input id="password" name="password" type="password" required minlength="8" autocomplete="new-password">
+    <label for="confirm">Confirm password</label>
+    <input id="confirm" name="confirm" type="password" required minlength="8" autocomplete="new-password">
+    <button class="btn auth-submit" type="submit">Create account <span aria-hidden="true">→</span></button>
+  </form>
+  <p class="sub auth-switch">Already registered? <a href="{{ url_for('login') }}">Log in</a></p>
+</div></section>
+{% endblock %}
